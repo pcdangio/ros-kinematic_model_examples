@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>simple_joint</name>
+  <name>kinematic_model_examples</name>
   <version>0.0.0</version>
-  <description>The simple_joint package</description>
+  <description>The kinematic_model_examples package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/simple_joint</url> -->
+  <!-- <url type="website">http://wiki.ros.org/kinematic_model_examples</url> -->
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
@@ -49,17 +49,7 @@
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>kinematic_model</build_depend>
-  <build_depend>roscpp</build_depend>
-  <build_export_depend>kinematic_model</build_export_depend>
-  <build_export_depend>roscpp</build_export_depend>
-  <exec_depend>kinematic_model</exec_depend>
-  <exec_depend>roscpp</exec_depend>
+  <depend>roscpp</depend>
+  <depend>kinematic_model</depend>
 
-
-  <!-- The export tag contains other, unspecified, tags -->
-  <export>
-    <!-- Other tools can request additional information be placed here -->
-
-  </export>
 </package>
