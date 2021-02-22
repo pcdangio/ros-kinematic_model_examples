@@ -32,17 +32,15 @@ void simple_joint_t::build_geometry(geometry::design_t& design) const
     design.add_object(link_a);
     design.add_object(link_b, link_a, joint_ab);
 }
-void simple_joint_t::state_transition(const Eigen::VectorXd& xp, const Eigen::VectorXd& q, Eigen::VectorXd& x) const
+void simple_joint_t::state_transition(const Eigen::VectorXd& xp, Eigen::VectorXd& x) const
 {
     // For basic example, assume the joint position doesn't change.
-    // Assume additive process noise.
-    x(0) = xp(0) + q(0);
+    x(0) = xp(0);
 }
-void simple_joint_t::observation(const Eigen::VectorXd& x, const Eigen::VectorXd& r, Eigen::VectorXd& z) const
+void simple_joint_t::observation(const Eigen::VectorXd& x, Eigen::VectorXd& z) const
 {
     // For basic example, observer 0 is a direct observer of state 0.
-    // Assume additive measurement noise.
-    z(0) = x(0) + r(0);
+    z(0) = x(0);
 }
 
 void simple_joint_t::callback_joint_sensor(const std_msgs::Float64ConstPtr& message)
