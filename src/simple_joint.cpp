@@ -13,24 +13,44 @@ simple_joint_t::simple_joint_t()
     Eigen::VectorXd x_o(1);
     Eigen::VectorXd P_o(1,1);
     x_o(0) = 0;
-    P_o(0,0) = 0.01;
+    P_o(0,0) = 0.5;
     simple_joint_t::initialize_state(x_o, P_o);
 
     // Set up subscriber for joint angle messages.
     ros::NodeHandle node;
     simple_joint_t::m_subscriber_joint_sensor = node.subscribe<std_msgs::Float64>("joint_angle", 1, &simple_joint_t::callback_joint_sensor, this);
+
+    // Set up publisher for estimated joint angle messages.
+    ros::NodeHandle private_node("~");
+    simple_joint_t::m_publisher_joint = private_node.advertise<std_msgs::Float64>("joint", 1);
 }
 
 void simple_joint_t::build_geometry(geometry::design_t& design) const
 {
-    // Create geometry objects.
+    // Create links.
     auto link_a = design.create_link("link_a");
     auto link_b = design.create_link("link_b");
+
+    // Create joint.
     auto joint_ab = design.create_joint("joint_ab", geometry::object::joint_t::type_t::REVOLUTE, 0);
+    // Joint axis defaults to (0,0,1)
 
     // Add objects to the model's design.
     design.add_object(link_a);
-    design.add_object(link_b, link_a, joint_ab);
+    design.add_object(joint_ab, link_a, 1, 0, 0, 0, 0, 0);
+    design.add_object(link_b, joint_ab, 1, 0, 0, 0, 0, 0);
+}
+void simple_joint_t::on_state_update()
+{
+    // Use method to publish the joint's current state.
+    
+    // Get the current state.
+    auto& state = simple_joint_t::state();
+
+    // Publish the joint's current estimated position.
+    std_msgs::Float64 joint_message;
+    joint_message.data = state(0);
+    simple_joint_t::m_publisher_joint.publish(joint_message);
 }
 void simple_joint_t::state_transition(const Eigen::VectorXd& xp, Eigen::VectorXd& x) const
 {
