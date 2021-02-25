@@ -13,7 +13,7 @@ simple_joint_t::simple_joint_t()
 
     // Initialize state.
     Eigen::VectorXd x_o(1);
-    Eigen::VectorXd P_o(1,1);
+    Eigen::MatrixXd P_o(1,1);
     x_o(0) = 0;
     P_o(0,0) = 0.5;
     simple_joint_t::initialize_state(x_o, P_o);
