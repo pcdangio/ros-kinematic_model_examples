@@ -122,6 +122,9 @@ include_directories(
 add_library(simple_joint_plugin MODULE src/simple_joint.cpp)
 add_dependencies(simple_joint_plugin ${catkin_EXPORTED_TARGETS})
 
+add_library(simple_pose_plugin MODULE src/simple_pose.cpp)
+add_dependencies(simple_pose_plugin ${catkin_EXPORTED_TARGETS})
+
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
