@@ -2,7 +2,9 @@
 
 using namespace kinematic_model;
 
+// CONSTRUCTOR
 simple_joint_t::simple_joint_t()
+    // Initialze the base class with 1 state variable (joint position) and 1 sensor
     : kinematic_model_t(1, 1)
 {
     // Initialize state estimation covariances.
@@ -25,6 +27,7 @@ simple_joint_t::simple_joint_t()
     simple_joint_t::m_publisher_joint = private_node.advertise<std_msgs::Float64>("joint", 1);
 }
 
+// REQUIRED OVERRIDES
 void simple_joint_t::build_geometry(geometry::design_t& design) const
 {
     // Create links.
@@ -40,18 +43,6 @@ void simple_joint_t::build_geometry(geometry::design_t& design) const
     design.add_object(joint_ab, link_a, 1, 0, 0, 0, 0, 0);
     design.add_object(link_b, joint_ab, 1, 0, 0, 0, 0, 0);
 }
-void simple_joint_t::on_state_update()
-{
-    // Use method to publish the joint's current state.
-    
-    // Get the current state.
-    auto& state = simple_joint_t::state();
-
-    // Publish the joint's current estimated position.
-    std_msgs::Float64 joint_message;
-    joint_message.data = state(0);
-    simple_joint_t::m_publisher_joint.publish(joint_message);
-}
 void simple_joint_t::state_transition(const Eigen::VectorXd& xp, Eigen::VectorXd& x) const
 {
     // For basic example, assume the joint position doesn't change.
@@ -63,6 +54,22 @@ void simple_joint_t::observation(const Eigen::VectorXd& x, Eigen::VectorXd& z) c
     z(0) = x(0);
 }
 
+// STATE PUBLISHING
+void simple_joint_t::on_state_update()
+{
+    // Use method to publish the joint's current state.
+    // This method is called automatically each time a new state is calculated.
+    
+    // Get the current state.
+    auto& state = simple_joint_t::state();
+
+    // Publish the joint's current estimated position.
+    std_msgs::Float64 joint_message;
+    joint_message.data = state(0);
+    simple_joint_t::m_publisher_joint.publish(joint_message);
+}
+
+// SENSOR SUBSCRIBER CALLBACK
 void simple_joint_t::callback_joint_sensor(const std_msgs::Float64ConstPtr& message)
 {
     // Add sensor measurement as new observation.
