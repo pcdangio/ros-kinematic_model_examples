@@ -1,3 +1,5 @@
+// SEE README.md FOR details on this example's configuration.
+
 #include "simple_joint.hpp"
 
 using namespace kinematic_model;
