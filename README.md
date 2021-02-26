@@ -31,7 +31,7 @@ git clone https://github.com/pcdangio/ros-kinematic_model_examples.git src/kinem
 catkin_make
 ```
 
-## Example Detail
+## Usage
 
 ### simple_joint
 
