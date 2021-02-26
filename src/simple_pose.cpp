@@ -1,3 +1,5 @@
+// SEE README.md FOR details on this example's configuration.
+
 #include "simple_pose.hpp"
 
 using namespace kinematic_model;
@@ -5,8 +7,6 @@ using namespace kinematic_model;
 // CONSTRUCTOR
 simple_pose_t::simple_pose_t()
     // Initialze the base class with 7 state variables and 7 sensors
-    // Variables are: x, y, z, qw, qx, qy, qz
-    // Sensors directly sense each variable.
     : kinematic_model_t(7, 7)
 {
     // Initialize state estimation covariances.
@@ -40,12 +40,20 @@ void simple_pose_t::build_geometry(geometry::design_t& design) const
     // Create a single base link for the robot.
     auto link_robot = design.create_link("robot");
 
+    // The position sensor is offset from the robot frame's origin.
+    // Create a frame for the position sensor.
+    auto frame_position_sensor = design.create_frame("position_sensor");
+
     // Add world frame to the design.
     design.add_object(frame_world);
 
     // Add the robot link, attaching it to the world frame with a dynamic pose attachment.
     // The state indices correspond to the state vector: x y z qw qx qy qz.
     design.add_object(link_robot, frame_world, 0, 1, 2, 3, 4, 5, 6);
+
+    // Add the position_frame to the robot, with a fixed attachment using the sensor's offset position.
+    // Sensor is offset from robot origin by x = 0, y = -0.2, z = 0.1
+    design.add_object(frame_position_sensor, link_robot, 0, -0.2, 0.1, 0, 0, 0);
 }
 void simple_pose_t::state_transition(const Eigen::VectorXd& xp, Eigen::VectorXd& x) const
 {
@@ -54,8 +62,26 @@ void simple_pose_t::state_transition(const Eigen::VectorXd& xp, Eigen::VectorXd&
 }
 void simple_pose_t::observation(const Eigen::VectorXd& x, Eigen::VectorXd& z) const
 {
-    // For basic example, we have direct observation of the states.
-    z = x;
+    // State x/y/z are in robot frame. Position sensors z(0)/z(1)/z(2) are in position_sensor frame.
+    // Get the transform from the robot frame to the position_sensor frame.
+    transform::transform_t transform;
+    simple_pose_t::get_transform("robot", "position_sensor", transform);
+    // Apply transform to the robot's x/y/z state to get the expected position sensor measurement.
+    Eigen::Vector3d position;
+    position.x() = x(0);
+    position.y() = x(1);
+    position.z() = x(2);
+    transform.transform(position);
+    // Set transformed position as the expected position sensor measurement.
+    z(0) = position.x();
+    z(1) = position.y();
+    z(2) = position.z();
+
+    // Orientation sensor directly observes the orientation state.
+    z(3) = x(3);
+    z(4) = x(4);
+    z(5) = x(5);
+    z(6) = x(6);
 }
 
 // SENSOR SUBSCRIBER CALLBACKS

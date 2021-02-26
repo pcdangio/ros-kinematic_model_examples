@@ -1,3 +1,5 @@
+// SEE README.md FOR details on this example's configuration.
+
 #ifndef SIMPLE_POSE_H
 #define SIMPLE_POSE_H
 
