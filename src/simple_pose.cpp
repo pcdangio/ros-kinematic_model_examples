@@ -65,7 +65,7 @@ void simple_pose_t::observation(const Eigen::VectorXd& x, Eigen::VectorXd& z) co
     // State x/y/z are in robot frame. Position sensors z(0)/z(1)/z(2) are in position_sensor frame.
     // Get the transform from the robot frame to the position_sensor frame.
     transform::transform_t transform;
-    simple_pose_t::get_transform("robot", "position_sensor", transform);
+    simple_pose_t::get_transform("robot", "position_sensor", x, transform);
     // Apply transform to the robot's x/y/z state to get the expected position sensor measurement.
     Eigen::Vector3d position;
     position.x() = x(0);
