@@ -53,10 +53,10 @@ You may now interact with the node in various ways:
 
 ```bash
 # In one terminal, you can echo the joint state that is being published by the plugin:
-rostopic echo /kinematic_model/joint
+rostopic echo /kinematic_model/estimated_joint_angle
 
 # In another terminal, you can publish "simulated" sensor data at 10Hz that the plugin will listen to:
-rostopic pub /joint_angle std_msgs/Float64 "data: 1.5708" -r 10
+rostopic pub /sensed_joint_angle std_msgs/Float64 "data: 1.5708" -r 10
 # While the sensor data is publishing, you can watch the published joint state on /kinematic_model/joint change.
 
 # In another terminal, you can use the get_transform service to view real-time transforms between the various robot frames:
@@ -86,15 +86,15 @@ You may now interact with the node in various ways:
 
 ```bash
 # In one terminal, you can echo the robot's pose (in the "world" frame) that is being published by the plugin:
-rostopic echo /kinematic_model/pose 
+rostopic echo /kinematic_model/estimated_pose 
 
 # In two other terminals, you can publish "simulated" sensor data at 10Hz that the plugin will listen to.
 # Publisher for position data:
-rostopic pub /position geometry_msgs/Point "x: 1.0
+rostopic pub /sensed_position geometry_msgs/Point "x: 1.0
 y: 2.0
 z: 3.0" -r 10 
 # Publisher for orientation data:
-rostopic pub /orientation geometry_msgs/Quaternion "x: 0.0638159
+rostopic pub /sensed_orientation geometry_msgs/Quaternion "x: 0.0638159
 y: -0.073467
 z: 0.3773521
 w: 0.9209427" -r 10
